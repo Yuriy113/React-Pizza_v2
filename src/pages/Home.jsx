@@ -14,7 +14,7 @@ const Home = () => {
   const sortType = sort.sortProperty;
   const dispatch = useDispatch();
 
-  const searchValue = useContext(SearchContext);
+  const { searchValue } = useContext(SearchContext);
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +33,7 @@ const Home = () => {
     fetch(
       `https://63cc411eea855154151e1425.mockapi.io/items?page=${currentPage}&limit=4&${
         categoryId > 0 ? `category=${categoryId}` : ''
-      }&sortBy=${sortType.sortProperty}&order=${order}${search}`,
+      }&sortBy=${sortType}&order=${order}${search}`,
     )
       .then((res) => {
         return res.json();
@@ -58,12 +58,7 @@ const Home = () => {
     <div className="container">
       <div className="content__top">
         <Categories value={categoryId} onChangeCategory={onChangeCategory} />
-        <Sort
-          // value={sortType}
-          order={order}
-          onOrderChange={onOrderChange}
-          // onChangeSort={(i) => setSortType(i)}
-        />
+        <Sort order={order} onOrderChange={onOrderChange} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? sceletons : pizzas}</div>
