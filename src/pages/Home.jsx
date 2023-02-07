@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 
-import { setCategoryId } from '../components/redux/slices/filterSlice';
+import { setCategoryId, setCurrentPage } from '../components/redux/slices/filterSlice';
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
@@ -10,17 +11,21 @@ import Pagination from '../components/Pagination';
 import { SearchContext } from '../App';
 
 const Home = () => {
-  const { categoryId, sort } = useSelector((state) => state.filter);
+  const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
   const sortType = sort.sortProperty;
   const dispatch = useDispatch();
 
   const { searchValue } = useContext(SearchContext);
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
 
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
+  };
+
+  const onChangePage = (number) => {
+    dispatch(setCurrentPage(number));
   };
 
   const [order, setOrder] = useState('desc');
@@ -30,18 +35,17 @@ const Home = () => {
 
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    fetch(
-      `https://63cc411eea855154151e1425.mockapi.io/items?page=${currentPage}&limit=4&${
-        categoryId > 0 ? `category=${categoryId}` : ''
-      }&sortBy=${sortType}&order=${order}${search}`,
-    )
+    axios
+      .get(
+        `https://63cc411eea855154151e1425.mockapi.io/items?page=${currentPage}&limit=4&${
+          categoryId > 0 ? `category=${categoryId}` : ''
+        }&sortBy=${sortType}&order=${order}${search}`,
+      )
       .then((res) => {
-        return res.json();
-      })
-      .then((json) => {
-        setItems(json);
+        setItems(res.data);
         setIsLoading(false);
       });
+
     window.scrollTo(0, 0);
   }, [categoryId, sortType, searchValue, currentPage, order]);
 
@@ -62,7 +66,7 @@ const Home = () => {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? sceletons : pizzas}</div>
-      <Pagination onChangePage={(nubmer) => setCurrentPage(nubmer)} />
+      <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
 };
