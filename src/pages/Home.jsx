@@ -11,16 +11,13 @@ import Sort, { sortList } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Sceleton from '../components/PizzaBlock/Sceleton';
 import Pagination from '../components/Pagination';
-import { SearchContext } from '../App';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
+  const { categoryId, sort, currentPage, searchValue } = useSelector((state) => state.filter);
   const { items, status } = useSelector((state) => state.pizza);
   const sortType = sort.sortProperty;
   const dispatch = useDispatch();
-  const { searchValue } = useContext(SearchContext);
-  // const [isLoading, setIsLoading] = useState(true);
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
@@ -33,8 +30,6 @@ const Home = () => {
   };
 
   const getPizzas = async () => {
-    // setIsLoading(true);
-
     const search = searchValue ? `&search=${searchValue}` : '';
     const category = categoryId > 0 ? `category=${categoryId}` : '';
 
