@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import qs from 'qs';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { setCategoryId, setCurrentPage, setFilters } from '../components/redux/slices/filterSlice';
 import { fetchPizzas } from '../components/redux/slices/pizzaSlice';
@@ -83,7 +82,11 @@ const Home = () => {
     isMounted.current = true;
   }, [sortType, categoryId, currentPage]);
 
-  const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+  const pizzas = items.map((obj) => (
+    <Link to={`/pizza/${obj.id}`}>
+      <PizzaBlock key={obj.id} {...obj} />
+    </Link>
+  ));
 
   const sceletons = [...new Array(6)].map((_, index) => <Sceleton key={index} />);
 
