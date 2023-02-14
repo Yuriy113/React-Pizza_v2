@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setSort } from './redux/slices/filterSlice';
+import { setSort, Sort, SortPropertyEnum } from './redux/slices/filterSlice';
 
 type SortItem = {
   name: string;
-  sortProperty: string;
+  sortProperty: SortPropertyEnum;
 };
 
 type SortProps = {
@@ -13,13 +13,17 @@ type SortProps = {
   onOrderChange: any;
 };
 
+type PopupClick = MouseEvent & {
+  path: Node[];
+};
+
 export const sortList: SortItem[] = [
-  { name: 'популярности', sortProperty: 'rating' },
-  { name: 'цене', sortProperty: 'price' },
-  { name: 'алфавиту', sortProperty: 'title' },
+  { name: 'популярности', sortProperty: SortPropertyEnum.RATING },
+  { name: 'цене', sortProperty: SortPropertyEnum.PRICE },
+  { name: 'алфавиту', sortProperty: SortPropertyEnum.TITLE },
 ];
 
-const Sort: React.FC<SortProps> = ({ order, onOrderChange }) => {
+const SortPopup: React.FC<SortProps> = ({ order, onOrderChange }) => {
   const dispatch = useDispatch();
   const sort = useSelector((state: any) => state.filter.sort);
   const sortRef = useRef<HTMLDivElement>(null);
@@ -32,9 +36,9 @@ const Sort: React.FC<SortProps> = ({ order, onOrderChange }) => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (e: any) => {
-      if (!e.path.includes(sortRef.current)) {
-        console.log('click outside');
+    const handleClickOutside = (e: MouseEvent) => {
+      const _event = e as PopupClick;
+      if (sortRef.current && !_event.path.includes(sortRef.current)) {
         setOpen(false);
       }
     };
@@ -87,4 +91,4 @@ const Sort: React.FC<SortProps> = ({ order, onOrderChange }) => {
   );
 };
 
-export default Sort;
+export default SortPopup;
