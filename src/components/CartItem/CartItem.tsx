@@ -1,8 +1,19 @@
 import React, { createFactory } from 'react';
 import { useDispatch } from 'react-redux';
+import { UrlWithStringQuery } from 'url';
 import { addItem, removeItem, minusItem } from '../redux/slices/cartSlice';
 
-const CartItem = ({ id, title, type, price, count, imageUrl, size }) => {
+type CartItemProps = {
+  id: string;
+  title: string;
+  type: string;
+  price: number;
+  count: number;
+  imageUrl: string;
+  size: number;
+};
+
+const CartItem: React.FC<CartItemProps> = ({ id, title, type, price, count, imageUrl, size }) => {
   const dispatch = useDispatch();
 
   const onClickPlus = () => {

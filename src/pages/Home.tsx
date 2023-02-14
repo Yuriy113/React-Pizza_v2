@@ -11,20 +11,20 @@ import PizzaBlock from '../components/PizzaBlock';
 import Sceleton from '../components/PizzaBlock/Sceleton';
 import Pagination from '../components/Pagination';
 
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { categoryId, sort, currentPage, searchValue } = useSelector((state) => state.filter);
-  const { items, status } = useSelector((state) => state.pizza);
+  const { categoryId, sort, currentPage, searchValue } = useSelector((state: any) => state.filter);
+  const { items, status } = useSelector((state: any) => state.pizza);
   const sortType = sort.sortProperty;
   const dispatch = useDispatch();
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
-  const onChangeCategory = (id) => {
+  const onChangeCategory = (id: number) => {
     dispatch(setCategoryId(id));
   };
 
-  const onChangePage = (number) => {
+  const onChangePage = (number: number) => {
     dispatch(setCurrentPage(number));
   };
 
@@ -33,6 +33,7 @@ const Home = () => {
     const category = categoryId > 0 ? `category=${categoryId}` : '';
 
     dispatch(
+      // @ts-ignore
       fetchPizzas({
         search,
         category,
@@ -82,7 +83,7 @@ const Home = () => {
     isMounted.current = true;
   }, [sortType, categoryId, currentPage]);
 
-  const pizzas = items.map((obj) => (
+  const pizzas = items.map((obj: any) => (
     <Link to={`/pizza/${obj.id}`}>
       <PizzaBlock key={obj.id} {...obj} />
     </Link>
@@ -106,7 +107,7 @@ const Home = () => {
       {status === 'error' ? (
         <div className="content__error-info">
           <h2>
-            Произошла ошибка <icon>😕</icon>
+            Произошла ошибка <span>😕</span>
           </h2>
           <p>Попробуйте повторить попытку позже</p>
         </div>
